@@ -1,0 +1,33 @@
+#!/bin/sh
+# Controles obligatorios antes de cada commit. Si uno falla, el commit se cancela.
+
+paso() {
+  echo ""
+  echo "[pre-commit] $1"
+}
+
+rechazar() {
+  echo ""
+  echo "[pre-commit] COMMIT RECHAZADO: $1"
+  echo "[pre-commit] $2"
+  exit 1
+}
+
+paso "1/3 Formatter: verificando el formato con Spotless..."
+./mvnw -q spotless:check ||
+  rechazar "el código no respeta el formato acordado." \
+    "Ejecutá 'mvn spotless:apply', revisá los cambios y volvé a hacer el commit."
+
+paso "2/3 Linter: verificando las reglas de estilo con Checkstyle..."
+./mvnw -q checkstyle:check ||
+  rechazar "se detectaron violaciones de estilo." \
+    "Corregí las líneas indicadas arriba y volvé a hacer el commit."
+
+paso "3/3 Pruebas: ejecutando la suite de pruebas unitarias..."
+./mvnw -q test ||
+  rechazar "hay pruebas unitarias que fallan." \
+    "Revisá el detalle de las pruebas fallidas arriba y volvé a hacer el commit."
+
+echo ""
+echo "[pre-commit] Formato, estilo y pruebas OK. Se registra el commit."
+exit 0
