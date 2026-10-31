@@ -21,3 +21,5 @@ El reporte de cobertura de JaCoCo queda en `target/site/jacoco/index.html`.
 
 - `CalculadoraCobertura`: cálculo del importe y del porcentaje de cobertura.
 - `pagos/ServicioCobro`: cobro de la venta a través de la interfaz `PasarelaPagos`.
+- `ventas/ProcesadorVentas`: importe final de una venta según la obra social, el tipo de
+  tratamiento y la forma de pago. Los datos de la venta se agrupan en el record `Venta`.
